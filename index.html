@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LinkedIn Company URL Finder</title>
+    <link rel="stylesheet" href="/static/styles.css">
+</head>
+<body>
+    <div class="container">
+        <h1>LinkedIn Company URL Finder</h1>
+        <p>Find LinkedIn company pages from a list of company names</p>
+        <form id="uploadForm">
+            <input type="file" id="fileInput" name="file" required>
+            <button type="submit">Start</button>
+        </form>
+        <p id="status"></p>
+    </div>
+
+    <script>
+        document.getElementById("uploadForm").onsubmit = async function(event) {
+            event.preventDefault();
+            let formData = new FormData();
+            formData.append("file", document.getElementById("fileInput").files[0]);
+
+            document.getElementById("status").innerText = "Processing...";
+
+            let response = await fetch("/upload/", {
+                method: "POST",
+                body: formData
+            });
+
+            if (response.ok) {
+                let blob = await response.blob();
+                let link = document.createElement("a");
+                link.href = window.URL.createObjectURL(blob);
+                link.download = "output.xlsx";
+                link.click();
+                document.getElementById("status").innerText = "Download Complete!";
+            } else {
+                document.getElementById("status").innerText = "Error processing file.";
+            }
+        };
+    </script>
+</body>
+</html>

@@ -1,4 +1,5 @@
-flask
-requests
+fastapi
 pandas
 googlesearch-python
+openpyxl
+uvicorn
